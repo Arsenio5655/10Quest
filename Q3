@@ -1,0 +1,51 @@
+import { useState } from "react";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+
+type Item = { id: string; nome: string; quantidade: number };
+
+const inicial: Item[] = [
+{ id: "1", nome: "Arroz", quantidade: 2 },
+{ id: "2", nome: "Feijão", quantidade: 1 },
+{ id: "3", nome: "Leite", quantidade: 3 },
+{ id: "4", nome: "Ovos", quantidade: 12 },
+{ id: "5", nome: "Pão", quantidade: 1 },
+{ id: "6", nome: "Manteiga", quantidade: 1 },
+{ id: "7", nome: "Frango", quantidade: 2 },
+{ id: "8", nome: "Macarrão", quantidade: 3 },
+];
+
+export default function ListaCompras() {
+const [itens, setItens] = useState<Item[]>(inicial);
+const remover = (id: string) => setItens((prev) => prev.filter((i) => i.id !== id));
+return (
+<View style={styles.page}>
+<Text style={styles.title}>LISTA DE COMPRAS</Text>
+<FlatList
+data={itens}
+keyExtractor={(item) => item.id}
+contentContainerStyle={{ gap: 8 }}
+renderItem={({ item }) => (
+<View style={styles.row}>
+<View style={{ flex: 1 }}>
+<Text style={styles.nome}>{item.nome}</Text>
+<Text style={styles.qtd}>x{item.quantidade}</Text>
+</View>
+<TouchableOpacity onPress={() => remover(item.id)} style={styles.removeBtn}>
+<Text style={styles.removeTxt}>remover</Text>
+</TouchableOpacity>
+</View>
+)}
+/>
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", paddingTop: 64, paddingHorizontal: 24 },
+title: { fontSize: 11, letterSpacing: 4, color: "#555", marginBottom: 24 },
+row: { flexDirection: "row", alignItems: "center", backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 16 },
+nome: { fontSize: 16, color: "#f0f0f0" },
+qtd: { fontSize: 12, color: "#555", marginTop: 2 },
+removeBtn: { borderWidth: 1, borderColor: "#e53935", borderRadius: 4, paddingVertical: 6, paddingHorizontal: 12 },
+removeTxt: { color: "#e53935", fontSize: 12 },
+});
