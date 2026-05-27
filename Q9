@@ -1,0 +1,61 @@
+import { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+
+type Aluno = { id: string; nome: string; nota: number };
+
+export default function Notas() {
+const [alunos, setAlunos] = useState<Aluno[]>([]);
+const [nome, setNome] = useState("");
+const [nota, setNota] = useState("");
+const adicionar = () => {
+const n = parseFloat(nota);
+if (!nome.trim() || isNaN(n)) return;
+setAlunos((prev) => [...prev, { id: Date.now().toString(), nome, nota: n }]);
+setNome(""); setNota("");
+};
+const media = alunos.length ? (alunos.reduce((s, a) => s + a.nota, 0) / alunos.length).toFixed(1) : "-";
+const maior = alunos.length ? Math.max(...alunos.map((a) => a.nota)) : "-";
+const menor = alunos.length ? Math.min(...alunos.map((a) => a.nota)) : "-";
+return (
+<View style={styles.page}>
+<Text style={styles.header}>NOTAS</Text>
+<View style={styles.stats}>
+<View style={styles.stat}><Text style={styles.statLabel}>MÉDIA</Text><Text style={styles.statVal}>{media}</Text></View>
+<View style={styles.stat}><Text style={styles.statLabel}>MAIOR</Text><Text style={styles.statVal}>{maior}</Text></View>
+<View style={styles.stat}><Text style={styles.statLabel}>MENOR</Text><Text style={styles.statVal}>{menor}</Text></View>
+</View>
+<View style={styles.inputRow}>
+<TextInput style={[styles.input, { flex: 2 }]} value={nome} onChangeText={setNome} placeholder="nome" placeholderTextColor="#444" />
+<TextInput style={[styles.input, { flex: 1 }]} value={nota} onChangeText={setNota} placeholder="nota" placeholderTextColor="#444" keyboardType="numeric" />
+<TouchableOpacity style={styles.addBtn} onPress={adicionar}><Text style={styles.addTxt}>+</Text></TouchableOpacity>
+</View>
+<FlatList
+data={alunos}
+keyExtractor={(a) => a.id}
+contentContainerStyle={{ gap: 8 }}
+renderItem={({ item }) => (
+<View style={styles.row}>
+<Text style={styles.alunoNome}>{item.nome}</Text>
+<Text style={styles.alunoNota}>{item.nota}</Text>
+</View>
+)}
+/>
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", paddingTop: 64, paddingHorizontal: 24 },
+header: { fontSize: 11, letterSpacing: 4, color: "#555", marginBottom: 16 },
+stats: { flexDirection: "row", gap: 8, marginBottom: 20 },
+stat: { flex: 1, backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 12, alignItems: "center" },
+statLabel: { fontSize: 10, color: "#555", letterSpacing: 2 },
+statVal: { fontSize: 20, color: "#f0f0f0", fontWeight: "700" },
+inputRow: { flexDirection: "row", gap: 8, marginBottom: 16 },
+input: { backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 12, color: "#f0f0f0", fontSize: 14 },
+addBtn: { width: 48, backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, alignItems: "center", justifyContent: "center" },
+addTxt: { color: "#f0f0f0", fontSize: 24 },
+row: { flexDirection: "row", justifyContent: "space-between", backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 14 },
+alunoNome: { color: "#f0f0f0", fontSize: 14 },
+alunoNota: { color: "#aaa", fontSize: 14 },
+});
