@@ -1,0 +1,54 @@
+import { useState } from "react";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+
+type Post = { id: string; usuario: string; texto: string; curtidas: number };
+
+const iniciais: Post[] = [
+{ id: "1", usuario: "ana.dev", texto: "não tenho a geekone", curtidas: 12 },
+{ id: "2", usuario: "carlos_rb", texto: "Alguem me tira desse lugar pelo amor de Deus", curtidas: 7 },
+{ id: "3", usuario: "julia.tsx", texto: "Moggar, Tankar, Rushar, Counterar, Lootear...", curtidas: 34 },
+{ id: "4", usuario: "marcos01", texto: "resendog é muito gostoso, nhami nhami", curtidas: 5 },
+];
+
+export default function Feed() {
+const [posts, setPosts] = useState<Post[]>(iniciais);
+const curtir = (id: string) => setPosts((prev) => prev.map((p) => p.id === id ? { ...p, curtidas: p.curtidas + 1 } : p));
+const descurtir = (id: string) => setPosts((prev) => prev.map((p) => p.id === id ? { ...p, curtidas: Math.max(0, p.curtidas - 1) } : p));
+return (
+<View style={styles.page}>
+<Text style={styles.header}>FEED</Text>
+<FlatList
+data={posts}
+keyExtractor={(p) => p.id}
+contentContainerStyle={{ gap: 8 }}
+renderItem={({ item }) => (
+<View style={styles.card}>
+<Text style={styles.usuario}>{item.usuario}</Text>
+<Text style={styles.texto}>{item.texto}</Text>
+<View style={styles.actions}>
+<TouchableOpacity style={styles.btn} onPress={() => curtir(item.id)}>
+<Text style={styles.btnTxt}>▲ curtir</Text>
+</TouchableOpacity>
+<Text style={styles.curtidas}>{item.curtidas}</Text>
+<TouchableOpacity style={styles.btn} onPress={() => descurtir(item.id)}>
+<Text style={styles.btnTxt}>▼ descurtir</Text>
+</TouchableOpacity>
+</View>
+</View>
+)}
+/>
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", paddingTop: 64, paddingHorizontal: 24 },
+header: { fontSize: 11, letterSpacing: 4, color: "#555", marginBottom: 16 },
+card: { backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 16, gap: 8 },
+usuario: { fontSize: 12, color: "#555", letterSpacing: 1 },
+texto: { fontSize: 15, color: "#f0f0f0" },
+actions: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 4 },
+btn: { borderWidth: 1, borderColor: "#333", borderRadius: 4, paddingVertical: 4, paddingHorizontal: 10 },
+btnTxt: { color: "#aaa", fontSize: 11 },
+curtidas: { color: "#f0f0f0", fontSize: 14, fontWeight: "700", minWidth: 24, textAlign: "center" },
+});
