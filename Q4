@@ -1,0 +1,37 @@
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+
+type Props = { title: string; price: number; description: string; inStock: boolean };
+
+function ProductCard({ title, price, description, inStock }: Props) {
+return (
+<View style={[styles.card, !inStock && styles.cardOff]}>
+<Text style={styles.title}>{title}</Text>
+<Text style={styles.price}>R$ {price.toFixed(2)}</Text>
+<Text style={styles.desc}>{description}</Text>
+{!inStock && <Text style={styles.badge}>Indisponível</Text>}
+</View>
+);
+}
+
+export default function Produtos() {
+return (
+<ScrollView style={styles.page} contentContainerStyle={{ gap: 12, paddingBottom: 32 }}>
+<Text style={styles.header}>PRODUTOS</Text>
+<ProductCard title="Teclado Mecânico" price={350} description="Switch azul, RGB, ABNT2" inStock={true} />
+<ProductCard title="Mouse Gamer" price={180} description="12000 DPI, 6 botões" inStock={true} />
+<ProductCard title="Monitor 144hz" price={1200} description="27 pol, Full HD, IPS" inStock={false} />
+<ProductCard title="Headset USB" price={220} description="Som surround 7.1, microfone" inStock={false} />
+</ScrollView>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", paddingTop: 64, paddingHorizontal: 24 },
+header: { fontSize: 11, letterSpacing: 4, color: "#555", marginBottom: 8 },
+card: { backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 16, gap: 4 },
+cardOff: { opacity: 0.4 },
+title: { fontSize: 16, color: "#f0f0f0", fontWeight: "700" },
+price: { fontSize: 14, color: "#aaa" },
+desc: { fontSize: 12, color: "#555" },
+badge: { marginTop: 8, color: "#e53935", fontSize: 11, letterSpacing: 2 },
+});
