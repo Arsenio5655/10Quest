@@ -1,0 +1,37 @@
+import { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+
+export default function Login() {
+const [email, setEmail] = useState("");
+const [senha, setSenha] = useState("");
+const [erro, setErro] = useState("");
+const [ok, setOk] = useState(false);
+const entrar = () => {
+if (!email.trim() || !senha.trim()) { setErro("Preencha todos os campos."); return; }
+if (senha.length < 6) { setErro("Senha deve ter no mínimo 6 caracteres."); return; }
+setErro("");
+setOk(true);
+};
+return (
+<View style={styles.page}>
+<Text style={styles.header}>LOGIN</Text>
+<TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="email" placeholderTextColor="#444" keyboardType="email-address" autoCapitalize="none" />
+<TextInput style={styles.input} value={senha} onChangeText={setSenha} placeholder="senha" placeholderTextColor="#444" secureTextEntry />
+{erro ? <Text style={styles.erro}>{erro}</Text> : null}
+{ok ? <Text style={styles.sucesso}>Bem-vindo!</Text> : null}
+<TouchableOpacity style={styles.btn} onPress={entrar}>
+<Text style={styles.btnTxt}>Entrar</Text>
+</TouchableOpacity>
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", alignItems: "center", justifyContent: "center", paddingHorizontal: 32, gap: 12 },
+header: { fontSize: 11, letterSpacing: 4, color: "#555", marginBottom: 12 },
+input: { width: "100%", backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 14, color: "#f0f0f0", fontSize: 14 },
+erro: { color: "#e53935", fontSize: 12, alignSelf: "flex-start" },
+sucesso: { color: "#4caf50", fontSize: 12, alignSelf: "flex-start" },
+btn: { width: "100%", backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#333", borderRadius: 4, padding: 14, alignItems: "center", marginTop: 8 },
+btnTxt: { color: "#f0f0f0", fontSize: 14 },
+});
