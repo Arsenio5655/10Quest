@@ -1,0 +1,52 @@
+import { useState } from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+
+export default function Conversor() {
+const [celsius, setCelsius] = useState("");
+const [fahrenheit, setFahrenheit] = useState("");
+const [erro, setErro] = useState("");
+const deCelsius = (v: string) => {
+setCelsius(v);
+setErro("");
+const n = parseFloat(v);
+if (v === "" || v === "-") { setFahrenheit(""); return; }
+if (isNaN(n)) { setErro("Número inválido."); setFahrenheit(""); return; }
+setFahrenheit((n * 1.8 + 32).toFixed(2));
+};
+const deFahrenheit = (v: string) => {
+setFahrenheit(v);
+setErro("");
+const n = parseFloat(v);
+if (v === "" || v === "-") { setCelsius(""); return; }
+if (isNaN(n)) { setErro("Número inválido."); setCelsius(""); return; }
+setCelsius(((n - 32) / 1.8).toFixed(2));
+};
+return (
+<View style={styles.page}>
+<Text style={styles.header}>CONVERSOR DE TEMPERATURA</Text>
+<View style={styles.row}>
+<View style={styles.group}>
+<Text style={styles.label}>CELSIUS</Text>
+<TextInput style={styles.input} value={celsius} onChangeText={deCelsius} placeholder="0" placeholderTextColor="#444" keyboardType="numeric" />
+</View>
+<Text style={styles.seta}>⇄</Text>
+<View style={styles.group}>
+<Text style={styles.label}>FAHRENHEIT</Text>
+<TextInput style={styles.input} value={fahrenheit} onChangeText={deFahrenheit} placeholder="32" placeholderTextColor="#444" keyboardType="numeric" />
+</View>
+</View>
+{erro ? <Text style={styles.erro}>{erro}</Text> : null}
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", alignItems: "center", justifyContent: "center", paddingHorizontal: 24, gap: 24 },
+header: { fontSize: 11, letterSpacing: 4, color: "#555" },
+row: { flexDirection: "row", alignItems: "center", gap: 16 },
+group: { flex: 1, gap: 8 },
+label: { fontSize: 10, letterSpacing: 2, color: "#555" },
+input: { backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 14, color: "#f0f0f0", fontSize: 20, textAlign: "center" },
+seta: { color: "#555", fontSize: 20, marginTop: 20 },
+erro: { color: "#e53935", fontSize: 12 },
+});
