@@ -1,0 +1,59 @@
+import { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+
+type Tarefa = { id: string; texto: string; feita: boolean };
+
+export default function Todo() {
+const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+const [input, setInput] = useState("");
+const adicionar = () => {
+if (!input.trim()) return;
+setTarefas((prev) => [...prev, { id: Date.now().toString(), texto: input, feita: false }]);
+setInput("");
+};
+const toggle = (id: string) => setTarefas((prev) => prev.map((t) => t.id === id ? { ...t, feita: !t.feita } : t));
+const remover = (id: string) => setTarefas((prev) => prev.filter((t) => t.id !== id));
+const concluidas = tarefas.filter((t) => t.feita).length;
+return (
+<View style={styles.page}>
+<Text style={styles.header}>TO-DO — {concluidas}/{tarefas.length} concluídas</Text>
+<View style={styles.inputRow}>
+<TextInput style={styles.input} value={input} onChangeText={setInput} placeholder="nova tarefa..." placeholderTextColor="#444" />
+<TouchableOpacity style={styles.addBtn} onPress={adicionar}>
+<Text style={styles.addTxt}>+</Text>
+</TouchableOpacity>
+</View>
+<FlatList
+data={tarefas}
+keyExtractor={(t) => t.id}
+contentContainerStyle={{ gap: 8 }}
+renderItem={({ item }) => (
+<View style={styles.row}>
+<TouchableOpacity onPress={() => toggle(item.id)} style={styles.check}>
+<Text style={styles.checkTxt}>{item.feita ? "✓" : " "}</Text>
+</TouchableOpacity>
+<Text style={[styles.texto, item.feita && styles.textoFeito]}>{item.texto}</Text>
+<TouchableOpacity onPress={() => remover(item.id)}>
+<Text style={styles.del}>✕</Text>
+</TouchableOpacity>
+</View>
+)}
+/>
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, backgroundColor: "#0f0f0f", paddingTop: 64, paddingHorizontal: 24 },
+header: { fontSize: 11, letterSpacing: 4, color: "#555", marginBottom: 24 },
+inputRow: { flexDirection: "row", gap: 8, marginBottom: 24 },
+input: { flex: 1, backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 12, color: "#f0f0f0", fontSize: 14 },
+addBtn: { width: 48, backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, alignItems: "center", justifyContent: "center" },
+addTxt: { color: "#f0f0f0", fontSize: 24 },
+row: { flexDirection: "row", alignItems: "center", backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 12, gap: 12 },
+check: { width: 20, height: 20, borderWidth: 1, borderColor: "#333", alignItems: "center", justifyContent: "center" },
+checkTxt: { color: "#f0f0f0", fontSize: 12 },
+texto: { flex: 1, color: "#f0f0f0", fontSize: 14 },
+textoFeito: { color: "#444", textDecorationLine: "line-through" },
+del: { color: "#e53935", fontSize: 14 },
+});
