@@ -1,1 +1,32 @@
+import { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
+export default function Perfil() {
+  const [mostrar, setMostrar] = useState(false);
+  return (
+<View style={styles.page}>
+<TouchableOpacity style={styles.btn} onPress={() => setMostrar(!mostrar)}>
+<Text style={styles.btnText}>{mostrar ? "Esconder Perfil" : "Mostrar Perfil"}</Text>
+</TouchableOpacity>
+{mostrar && (
+<View style={styles.card}>
+<Text style={styles.label}>Nome</Text>
+<Text style={styles.value}>João Silva</Text>
+<Text style={styles.label}>Idade</Text>
+<Text style={styles.value}>22 anos</Text>
+<Text style={styles.label}>Curso</Text>
+<Text style={styles.value}>Análise e Desenvolvimento de Sistemas</Text>
+</View>
+)}
+</View>
+);
+}
+
+const styles = StyleSheet.create({
+page: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#0f0f0f", gap: 24 },
+btn: { paddingVertical: 12, paddingHorizontal: 32, borderWidth: 1, borderColor: "#333", borderRadius: 4 },
+btnText: { color: "#aaa", fontSize: 14 },
+card: { backgroundColor: "#1a1a1a", borderWidth: 1, borderColor: "#2e2e2e", borderRadius: 4, padding: 24, gap: 8, width: 300 },
+label: { fontSize: 11, color: "#555", letterSpacing: 2 },
+value: { fontSize: 16, color: "#f0f0f0", marginBottom: 8 },
+});
